@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\form_validation_unit_test_module\Form;
+namespace Drupal\form_validation_module_refactor_srp\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;

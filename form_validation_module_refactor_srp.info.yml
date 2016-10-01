@@ -1,0 +1,5 @@
+name: form_validation_module_refactor_srp
+type: module
+description: 'This module demonstrates how we can refactor an application to align with the Single Responsibility Princple, while maintaining unit test coverage.'
+package: PilotProgrammer
+core: '8.x'

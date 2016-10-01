@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\form_validation_unit_test_module\Unit;
+namespace Drupal\Tests\form_validation_module_refactor_srp\Unit;
 
 use Drupal\Tests\UnitTestCase;
 use Drupal\Core\Form\FormStateInterface;

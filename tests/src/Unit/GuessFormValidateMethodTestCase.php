@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\Tests\form_validation_unit_test_module\Unit;
+namespace Drupal\Tests\form_validation_module_refactor_srp\Unit;
 
-use Drupal\form_validation_unit_test_module\Form\GuessForm;
+use Drupal\form_validation_module_refactor_srp\Form\GuessForm;
 
 /**
- * @group form_validation_unit_test_module
+ * @group form_validation_module_refactor_srp
  */
 class GuessFormValidateMethodTestCase extends FormValidationUnitTestCase 
 {
@@ -19,7 +19,7 @@ class GuessFormValidateMethodTestCase extends FormValidationUnitTestCase
   
   protected function getFullyNamespacedFormClassToTest()
   {
-    return 'Drupal\form_validation_unit_test_module\Form\GuessForm';
+    return 'Drupal\form_validation_module_refactor_srp\Form\GuessForm';
   }
   
   protected function getFormElementNamesAndDefaultValues()
