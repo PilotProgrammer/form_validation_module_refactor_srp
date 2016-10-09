@@ -12,9 +12,6 @@ class GuessForm extends FormBase
   const submit_button_key = 'form_select_list_key';
   
   const question_selection_default_key = 'question_selection_default_key';
-  const favorite_number_key = 'favorite_number_key';
-  const favorite_color_key = 'favorite_color_key';
-  const favorite_aircraft_make_key = 'favorite_aircraft_make_key';
     
   const favorite_number = '14.5';
   const favorite_color = 'light cyan';
@@ -80,16 +77,19 @@ class GuessForm extends FormBase
     $selected_question_key = $values[GuessForm::select_list_key];
     $correct_answer_to_selected_question = $this->getAnswerToQuestion($selected_question_key);
     $entered_answer_value = $values[GuessForm::text_field_key];
-        
+
+    // 1
     if (empty($entered_answer_value))
       $form_state->setErrorByName(GuessForm::text_field_key, "You didn't guess anything!");
 
+    // 2
     if ($selected_question_key == GuessForm::question_selection_default_key)
       $form_state->setErrorByName(GuessForm::select_list_key, "Please select a question to guess an answer!");
 
+    // 3
     if ($entered_answer_value == GuessForm::text_field_default_value)
       $form_state->setErrorByName(GuessForm::text_field_key, "You should remove the default guess and enter your own.");
-    
+
     if ($entered_answer_value != $correct_answer_to_selected_question)
     {
       $entered_answer_is_correct_for_a_question_other_than_what_was_selected = false;
@@ -98,7 +98,7 @@ class GuessForm extends FormBase
       foreach ($question_selection_list as $question_selection_key => $question_selection_value)
       {
         $correct_answer_to_currently_iterated_question = $this->getAnswerToQuestion($question_selection_key);
-        
+
         if ($correct_answer_to_currently_iterated_question === $entered_answer_value)
         {
           $entered_answer_is_correct_for_a_question_other_than_what_was_selected = true;
@@ -108,6 +108,7 @@ class GuessForm extends FormBase
 
       if ($entered_answer_is_correct_for_a_question_other_than_what_was_selected)
       {
+        // 4
         $form_state->setErrorByName(
           GuessForm::text_field_key, "You entered an incorrect answer to the question you were trying to guess, "
           . "but the answer was ironically correct for a different question. Change the question and then click 'guess again'!"
@@ -115,6 +116,7 @@ class GuessForm extends FormBase
       }
       else
       {
+        // 5
         $form_state->setErrorByName(GuessForm::text_field_key, "You entered an incorrect answer to the question you were trying to guess.");
       }
     }
