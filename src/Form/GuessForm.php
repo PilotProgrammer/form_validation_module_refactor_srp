@@ -12,6 +12,9 @@ class GuessForm extends FormBase
   const submit_button_key = 'form_select_list_key';
   
   const question_selection_default_key = 'question_selection_default_key';
+  const favorite_number_key = 'favorite_number_key';
+  const favorite_color_key = 'favorite_color_key';
+  const favorite_aircraft_make_key = 'favorite_aircraft_make_key';
     
   const favorite_number = '14.5';
   const favorite_color = 'light cyan';
