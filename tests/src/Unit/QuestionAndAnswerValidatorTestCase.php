@@ -37,4 +37,15 @@ class QuestionAndAnswerValidatorTestCase extends UnitTestCase
     $error_message_or_success = $question_and_answer_validator->validateAnswerToQuestion($question_key, $answer_to_validate);
     $this->assertTrue($error_message_or_success === $expected_error_message, "The validate method should return an error message for incorrect input.");
   }
+  
+  public function testValidateIncorrectAnswerToQuestion()
+  {
+    $question_and_answer_validator = $this->getQuestionAndAnswerValidatorToTest();
+    $question_key = QuestionAndAnswerKeys::favorite_number_key;
+    $answer_to_validate = '-12345';
+    $expected_error_message = "You entered an incorrect answer to the question you were trying to guess.";
+
+    $error_message_or_success = $question_and_answer_validator->validateAnswerToQuestion($question_key, $answer_to_validate);
+    $this->assertTrue($error_message_or_success === $expected_error_message, "The validate method should return an error message for incorrect input.");
+  }
 }
