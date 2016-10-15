@@ -11,30 +11,30 @@ use Drupal\form_validation_module_refactor_srp\Model\QuestionAndAnswerKeys;
 */
 class QuestionAndAnswerValidatorTestCase extends UnitTestCase 
 {
-  public function getQuestionAndAnswerFacadeToTest()
+  public function getQuestionAndAnswerValidatorToTest()
   {
-    $question_and_answer_facade = new QuestionAndAnswerValidator();
-    return $question_and_answer_facade;
+    $question_and_answer_validator = new QuestionAndAnswerValidator();
+    return $question_and_answer_validator;
   }
   
   public function testValidateCorrectAnswerToQuestion() 
   {
-    $question_and_answer_facade = $this->getQuestionAndAnswerFacadeToTest();
+    $question_and_answer_validator = $this->getQuestionAndAnswerValidatorToTest();
     $question_key = QuestionAndAnswerKeys::favorite_aircraft_make_key;
     $answer_to_validate = 'Cessna';
     
-    $error_message_or_success = $question_and_answer_facade->validateAnswerToQuestion($question_key, $answer_to_validate);
+    $error_message_or_success = $question_and_answer_validator->validateAnswerToQuestion($question_key, $answer_to_validate);
     $this->assertTrue($error_message_or_success, "The validate method should return true for the correct answer.");
   }
   
   public function testValidateNoAnswerToQuestionGiven()
   {
-    $question_and_answer_facade = $this->getQuestionAndAnswerFacadeToTest();
+    $question_and_answer_validator = $this->getQuestionAndAnswerValidatorToTest();
     $question_key = QuestionAndAnswerKeys::favorite_number_key;
     $answer_to_validate = '';
     $expected_error_message = "You didn't guess anything!";
 
-    $error_message_or_success = $question_and_answer_facade->validateAnswerToQuestion($question_key, $answer_to_validate);
+    $error_message_or_success = $question_and_answer_validator->validateAnswerToQuestion($question_key, $answer_to_validate);
     $this->assertTrue($error_message_or_success === $expected_error_message, "The validate method should return an error message for incorrect input.");
   }
 }
