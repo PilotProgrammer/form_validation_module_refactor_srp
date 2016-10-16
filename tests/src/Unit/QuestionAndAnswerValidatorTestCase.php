@@ -35,7 +35,7 @@ class QuestionAndAnswerValidatorTestCase extends UnitTestCase
     $expected_error_message = "You didn't guess anything!";
 
     $error_message_or_success = $question_and_answer_validator->validateAnswerToQuestion($question_key, $answer_to_validate);
-    $this->assertTrue($error_message_or_success === $expected_error_message, "The validate method should return an error message for incorrect input.");
+    $this->assertTrue($error_message_or_success === $expected_error_message, "The validate method should return an error message for no answer given.");
   }
   
   public function testValidateIncorrectAnswerToQuestion()
@@ -47,5 +47,17 @@ class QuestionAndAnswerValidatorTestCase extends UnitTestCase
 
     $error_message_or_success = $question_and_answer_validator->validateAnswerToQuestion($question_key, $answer_to_validate);
     $this->assertTrue($error_message_or_success === $expected_error_message, "The validate method should return an error message for incorrect input.");
+  }
+  
+  public function testValidateCorrectAnswerGivenForNotCurrentlySelectedQuestion()
+  {
+    $question_and_answer_validator = $this->getQuestionAndAnswerValidatorToTest();
+    $question_key = QuestionAndAnswerKeys::favorite_number_key;
+    $answer_to_validate = 'Cessna';
+    $expected_error_message = "You entered an incorrect answer to the question you were trying to guess, "
+      . "but the answer was ironically correct for a different question. Change the question and then click 'guess again'!";
+
+    $error_message_or_success = $question_and_answer_validator->validateAnswerToQuestion($question_key, $answer_to_validate);
+    $this->assertTrue($error_message_or_success === $expected_error_message, "The validate method should return an error message for correct answer to non-selected question.");
   }
 }
