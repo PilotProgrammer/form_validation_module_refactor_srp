@@ -1,5 +1,3 @@
-# phpunit_example only has one route. It is to a page explaining
-# the module.
 form_validation_module_refactor_srp:
   path: 'form_validation_module_refactor_srp'
   defaults:

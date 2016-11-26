@@ -2,7 +2,7 @@
 
 namespace Drupal\form_validation_module_refactor_srp\Model;
 
-class QuestionAndAnswerValidator
+class QuestionAndAnswerValidator implements QuestionAndAnswerValidatorInterface
 {
   public function validateAnswerToQuestion($question_key, $answer_to_validate)
   {

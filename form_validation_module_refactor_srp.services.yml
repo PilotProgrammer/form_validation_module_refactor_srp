@@ -1,0 +1,3 @@
+services:
+  question_and_answer_validator:
+    class: Drupal\form_validation_module_refactor_srp\Model\QuestionAndAnswerValidator

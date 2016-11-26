@@ -5,6 +5,9 @@ namespace Drupal\form_validation_module_refactor_srp\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\form_validation_module_refactor_srp\Model\QuestionAndAnswerValidatorInterface;
+
 class GuessForm extends FormBase 
 {
   const select_list_key = 'select_list_key';
@@ -21,6 +24,20 @@ class GuessForm extends FormBase
   const favorit_aircraft_make = 'Cessna';
     
   const text_field_default_value = 'Enter your guess here';
+  
+  protected $question_and_answer_validator;
+  
+  public function __construct(QuestionAndAnswerValidatorInterface $question_and_answer_validator) 
+  {
+    $this->question_and_answer_validator = $question_and_answer_validator;
+  }
+
+  public static function create(ContainerInterface $container) 
+  {
+    return new static(
+      $container->get('question_and_answer_validator')
+    );
+  }
   
   public function getFormId()
   {
@@ -69,7 +86,7 @@ class GuessForm extends FormBase
       '#type' => 'submit',
       '#value' => 'Guess!',
     ];
-    
+
     return $form;
   }
   
