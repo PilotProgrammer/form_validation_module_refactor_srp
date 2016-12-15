@@ -16,6 +16,7 @@ class GuessFormValidateMethodTestCase extends FormValidationUnitTestCase
 
   protected $form_element_names_and_default_values;
   protected $fully_namespaced_form_class_to_test;
+  protected $mock_question_and_answer_validator;
   
   protected function getFullyNamespacedFormClassToTest()
   {
@@ -37,25 +38,57 @@ class GuessFormValidateMethodTestCase extends FormValidationUnitTestCase
     return ['getQuestionSelectionList', 'getAnswerToQuestion'];
   }
   
+  protected function getMockQuestionAndAnswerValidator()
+  {
+    $question_and_answer_validator = $this->getMockBuilder('\Drupal\form_validation_module_refactor_srp\Model\QuestionAndAnswerValidator')
+      ->setMethods([]) // we want to mock ALL methods on this object (so pass empty array)
+      ->getMock(); 
+    
+    $this->assertTrue($question_and_answer_validator instanceof \Drupal\form_validation_module_refactor_srp\Model\QuestionAndAnswerValidator);
+    
+    return $question_and_answer_validator;
+  }
+  
+  protected function getFormConstructorArguments()
+  {
+    return [ $this->mock_question_and_answer_validator ];
+  }
+  
+  public function setUp()
+  {
+    $this->mock_question_and_answer_validator = $this->getMockQuestionAndAnswerValidator();
+  }
+  
   public function testFormValidationNoErrorThrownForCorrectInput() {
     $form_element_names_and_input_values = [
       GuessForm::select_list_key => GuessForm::favorite_aircraft_make_key,
       GuessForm::text_field_key => 'Cessna'      
     ];
+    
+    $this->mock_question_and_answer_validator->expects($this->once())
+      ->method('validateAnswerToQuestion')
+      ->with(GuessForm::favorite_aircraft_make_key, 'Cessna')
+      ->will($this->returnValue(true));
 
     $this->assertFormElementDoesNotCausesErrorMessageWithValidFormInput($form_element_names_and_input_values);
   }
   
-  public function testFormValidationNoAnswerGiven() {
+  public function testFormValidationCallsSetErrorByNameWhenValidatorReturnsError() {
     $form_element_names_and_input_values = [
-      GuessForm::text_field_key => ""
+      GuessForm::select_list_key => GuessForm::favorite_aircraft_make_key,
+      GuessForm::text_field_key => 'wrong answer'      
     ];
 
-    $expected_error_message = "You didn't guess anything!";
+    $this->mock_question_and_answer_validator->expects($this->once())
+      ->method('validateAnswerToQuestion')
+      ->with(GuessForm::favorite_aircraft_make_key, 'wrong answer')
+      ->will($this->returnValue("This is an error message"));
 
-    $this->assertFormElementCausesErrorMessageWithInvalidFormInput(GuessForm::text_field_key, $expected_error_message, $form_element_names_and_input_values);
+    $expected_error_message = "This is an error message";
+
+    $this->assertFormElementCausesErrorMessageWithInvalidFormInput(GuessForm::text_field_key, $expected_error_message, $form_element_names_and_input_values);  
   }
-  
+
   public function testFormValidationNoQuestionSelected() {
     $form_element_names_and_input_values = [
       GuessForm::select_list_key => GuessForm::question_selection_default_key
@@ -74,27 +107,5 @@ class GuessFormValidateMethodTestCase extends FormValidationUnitTestCase
     $expected_error_message = "You should remove the default guess and enter your own.";
 
     $this->assertFormElementCausesErrorMessageWithInvalidFormInput(GuessForm::text_field_key, $expected_error_message, $form_element_names_and_input_values);
-  }
-  
-  public function testFormValidationIncorrectAnswerDetectedWhenIncorrectAnswerEntered() {
-    $form_element_names_and_input_values = [
-      GuessForm::select_list_key => GuessForm::favorite_number_key,
-      GuessForm::text_field_key => '-12345'
-    ];
-
-    $expected_error_message = "You entered an incorrect answer to the question you were trying to guess.";
-
-    $this->assertFormElementCausesErrorMessageWithInvalidFormInput(GuessForm::text_field_key, $expected_error_message, $form_element_names_and_input_values);
-  }
-  
-  public function testFormValidationCorrectAnswerGivenForNotCurrentlySelectedQuestion() {
-    $form_element_names_and_input_values = [
-      GuessForm::select_list_key => GuessForm::favorite_aircraft_make_key
-    ];
-
-    $expected_error_message = "You entered an incorrect answer to the question you were trying to guess, "
-      . "but the answer was ironically correct for a different question. Change the question and then click 'guess again'!";
-
-    $this->assertFormElementCausesErrorMessageWithInvalidFormInput(GuessForm::text_field_key, $expected_error_message, $form_element_names_and_input_values);
-  }
+  }  
 }

@@ -22,6 +22,8 @@ abstract class FormValidationUnitTestCase extends UnitTestCase
   // in the following method
   protected abstract function getMethodsToNotMockExcludingValidateFormMethod();
   
+  protected abstract function getFormConstructorArguments();
+  
   // A subclass can call this method to make sure the a FormStateInterface::setErrorByName is called for a specific
   // form element using a given combination of form element input values. 
   // The input values override the default values that are provided by getFormElementNamesAndDefaultValues.
@@ -102,9 +104,9 @@ abstract class FormValidationUnitTestCase extends UnitTestCase
     $fully_namespaced_form_class_to_test = $this->getFullyNamespacedFormClassToTest();
 
     $mock_form = $this->getMockBuilder($fully_namespaced_form_class_to_test)
-      ->setMethods($all_methods_to_mock)
-      ->disableOriginalConstructor()
-      ->getMock();
+      ->setMethods(null)
+      ->setConstructorArgs($this->getFormConstructorArguments())
+      ->getMock();    
 
     return $mock_form;
   }
