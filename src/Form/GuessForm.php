@@ -98,9 +98,10 @@ class GuessForm extends FormBase
     $correct_answer_to_selected_question = $this->getAnswerToQuestion($selected_question_key);
     $entered_answer_value = $values[GuessForm::text_field_key];
 
-    // 1
-    if (empty($entered_answer_value))
-      $form_state->setErrorByName(GuessForm::text_field_key, "You didn't guess anything!");
+    $error_message_or_success = $this->question_and_answer_validator->validateAnswerToQuestion($selected_question_key, $entered_answer_value);
+
+    if (is_string($error_message_or_success))
+      $form_state->setErrorByName(GuessForm::text_field_key, $error_message_or_success);
 
     // 2
     if ($selected_question_key == GuessForm::question_selection_default_key)
@@ -109,37 +110,6 @@ class GuessForm extends FormBase
     // 3
     if ($entered_answer_value == GuessForm::text_field_default_value)
       $form_state->setErrorByName(GuessForm::text_field_key, "You should remove the default guess and enter your own.");
-
-    if ($entered_answer_value != $correct_answer_to_selected_question)
-    {
-      $entered_answer_is_correct_for_a_question_other_than_what_was_selected = false;
-      $question_selection_list = $this->getQuestionSelectionList();
-
-      foreach ($question_selection_list as $question_selection_key => $question_selection_value)
-      {
-        $correct_answer_to_currently_iterated_question = $this->getAnswerToQuestion($question_selection_key);
-
-        if ($correct_answer_to_currently_iterated_question === $entered_answer_value)
-        {
-          $entered_answer_is_correct_for_a_question_other_than_what_was_selected = true;
-          break;
-        }
-      }
-
-      if ($entered_answer_is_correct_for_a_question_other_than_what_was_selected)
-      {
-        // 4
-        $form_state->setErrorByName(
-          GuessForm::text_field_key, "You entered an incorrect answer to the question you were trying to guess, "
-          . "but the answer was ironically correct for a different question. Change the question and then click 'guess again'!"
-        );
-      }
-      else
-      {
-        // 5
-        $form_state->setErrorByName(GuessForm::text_field_key, "You entered an incorrect answer to the question you were trying to guess.");
-      }
-    }
   }
   
   public function submitForm(array &$form, FormStateInterface $form_state)
