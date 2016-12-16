@@ -3,6 +3,8 @@
 namespace Drupal\Tests\form_validation_module_refactor_srp\Unit;
 
 use Drupal\form_validation_module_refactor_srp\Form\GuessForm;
+use Drupal\form_validation_module_refactor_srp\Model\QuestionAndAnswerKeys;
+use Drupal\form_validation_module_refactor_srp\Model\QuestionAndAnswerValidator;
 
 /**
  * @group form_validation_module_refactor_srp
@@ -25,9 +27,14 @@ class GuessFormValidateMethodTestCase extends FormValidationUnitTestCase
   
   protected function getFormElementNamesAndDefaultValues()
   {
+    $question_and_answer_validator = new QuestionAndAnswerValidator();
+    $favorite_number_answer = $question_and_answer_validator
+      ->getQuestionAndAnswerForKey(QuestionAndAnswerKeys::favorite_number_key)
+      ->getAnswer();
+    
     $form_element_names_and_default_values_for_test = [
-      GuessForm::select_list_key => GuessForm::favorite_number_key,
-      GuessForm::text_field_key => GuessForm::favorite_number
+      GuessForm::select_list_key => QuestionAndAnswerKeys::favorite_number_key,
+      GuessForm::text_field_key => $favorite_number_answer
     ];
     
     return $form_element_names_and_default_values_for_test;
@@ -61,13 +68,13 @@ class GuessFormValidateMethodTestCase extends FormValidationUnitTestCase
   
   public function testFormValidationNoErrorThrownForCorrectInput() {
     $form_element_names_and_input_values = [
-      GuessForm::select_list_key => GuessForm::favorite_aircraft_make_key,
+      GuessForm::select_list_key => QuestionAndAnswerKeys::favorite_aircraft_make_key,
       GuessForm::text_field_key => 'Cessna'      
     ];
     
     $this->mock_question_and_answer_validator->expects($this->once())
       ->method('validateAnswerToQuestion')
-      ->with(GuessForm::favorite_aircraft_make_key, 'Cessna')
+      ->with(QuestionAndAnswerKeys::favorite_aircraft_make_key, 'Cessna')
       ->will($this->returnValue(true));
 
     $this->assertFormElementDoesNotCausesErrorMessageWithValidFormInput($form_element_names_and_input_values);
@@ -75,13 +82,13 @@ class GuessFormValidateMethodTestCase extends FormValidationUnitTestCase
   
   public function testFormValidationCallsSetErrorByNameWhenValidatorReturnsError() {
     $form_element_names_and_input_values = [
-      GuessForm::select_list_key => GuessForm::favorite_aircraft_make_key,
+      GuessForm::select_list_key => QuestionAndAnswerKeys::favorite_aircraft_make_key,
       GuessForm::text_field_key => 'wrong answer'      
     ];
 
     $this->mock_question_and_answer_validator->expects($this->once())
       ->method('validateAnswerToQuestion')
-      ->with(GuessForm::favorite_aircraft_make_key, 'wrong answer')
+      ->with(QuestionAndAnswerKeys::favorite_aircraft_make_key, 'wrong answer')
       ->will($this->returnValue("This is an error message"));
 
     $expected_error_message = "This is an error message";

@@ -27,4 +27,19 @@ class QuestionAndAnswer
     else
       return false;
   }
+  
+  public function getQuestion()
+  {
+    return $this->question_text;
+  }
+  
+  public function getAnswer()
+  {
+    return $this->answer_text;
+  }
+  
+  public function getQuestionKey()
+  {
+    return $this->question_key;
+  }
 }

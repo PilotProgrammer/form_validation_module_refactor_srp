@@ -37,7 +37,7 @@ class QuestionAndAnswerValidator implements QuestionAndAnswerValidatorInterface
       return $error_message;
   }
   
-  protected function getQuestionAndAnswerForKey($key)
+  public function getQuestionAndAnswerForKey($key)
   {
     $questions = $this->getTextOfAllQuestions();
     $answers = $this->getTextOfAllAnswers();
@@ -83,7 +83,7 @@ class QuestionAndAnswerValidator implements QuestionAndAnswerValidatorInterface
     return $all_question_keys_except_the_one_to_exclude;
   }
   
-  protected function getTextOfAllQuestions()
+  public function getTextOfAllQuestions()
   {
     return [
       QuestionAndAnswerKeys::favorite_number_key => 'What\'s my favorite number?',
